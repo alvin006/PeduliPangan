@@ -44,7 +44,7 @@ class NotificationsFragment : Fragment() {
 
                     uid?.let {
                         if (it == currentUserUid && date != null && message != null) {
-                            notifications.add(Notification(it, date, message))
+                            notifications.add(Notification(it, date, message, "", ""))
                         }
                     }
                 }
@@ -54,7 +54,6 @@ class NotificationsFragment : Fragment() {
             }
             .addOnFailureListener { exception ->
             }
-
 
         return root
     }

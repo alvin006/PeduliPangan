@@ -31,7 +31,7 @@ class ReserveActivity : AppCompatActivity() {
 
         val productPrice = intent.getDoubleExtra(EXTRA_PRODUCT_PRICE, 0.0)
         val productQuantity = intent.getIntExtra(EXTRA_PRODUCT_QUANTITY, 0)
-
+        val productName = intent.getStringExtra(EXTRA_PRODUCT_NAME)
 
         val auth = FirebaseAuth.getInstance()
         val currentUser = auth.currentUser
@@ -48,17 +48,27 @@ class ReserveActivity : AppCompatActivity() {
         val formattedPrice = NumberFormat.getCurrencyInstance(Locale("id", "ID")).format(totalPrice)
         binding.priceReserve.text = getString(R.string.price_reserve, formattedPrice)
 
-        val notificationMessage = "Selamat, pembelian anda sebesar $formattedPrice telah berhasil"
-        val notification = Notification(currentUser.toString(), currentDateTime, notificationMessage)
-
         if (currentUser != null) {
             val uid = currentUser.uid
-            val notification = Notification(uid, currentDateTime, notificationMessage)
 
-            firestore.collection("notifications")
-                .add(notification.toMap())
-                .addOnSuccessListener {
-                    notificationsViewModel.addNotification(notification)
+            firestore.collection("users").document(uid)
+                .get()
+                .addOnSuccessListener { userDocument ->
+                    val namaPemesan = userDocument.getString("name")
+
+                    if (!namaPemesan.isNullOrEmpty()) {
+                        val notificationMessage = "Selamat, pembelian anda sebesar $formattedPrice telah berhasil"
+                        val namaRestoran = productName ?: ""
+                        val notification = Notification(uid, currentDateTime, notificationMessage, namaPemesan, namaRestoran)
+
+                        firestore.collection("notifications")
+                            .add(notification.toMap())
+                            .addOnSuccessListener {
+                                notificationsViewModel.addNotification(notification)
+                            }
+                            .addOnFailureListener { e ->
+                            }
+                    }
                 }
                 .addOnFailureListener { e ->
                 }
