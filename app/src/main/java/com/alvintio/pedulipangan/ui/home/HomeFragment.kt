@@ -184,7 +184,7 @@ class HomeFragment : Fragment() {
                                             it,
                                             location.latitude,
                                             location.longitude,
-                                            15.0 // Jarak maksimal dalam kilometer
+                                            10.0
                                         )
                                         Log.d("Restaurants", nearestRestaurants.toString())
                                         setupNearestRestaurantRecyclerView(nearestRestaurants)
@@ -255,29 +255,59 @@ class HomeFragment : Fragment() {
 
 
     private fun getProducts() {
-        val apiService = ApiConfig.getApiService()
+        if (hasLocationPermission()) {
+            val apiService = ApiConfig.getApiService()
 
-        apiService.getProducts().enqueue(object : Callback<List<Food>> {
-            override fun onResponse(call: Call<List<Food>>, response: Response<List<Food>>) {
-                if (response.isSuccessful) {
-                    val productList = response.body()
-                    productList?.let {
-                        val randomProducts = it.shuffled().take(5)
-                        setupRecyclerView(randomProducts)
-                    }
-                } else {
-                    Toast.makeText(
-                        requireContext(),
-                        "Failed to get products",
-                        Toast.LENGTH_SHORT
-                    ).show()
+            try {
+                val lastKnownLocation: Location? =
+                    locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+                        ?: locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
+
+                lastKnownLocation?.let { location ->
+                    apiService.getProducts()
+                        .enqueue(object : Callback<List<Food>> {
+                            override fun onResponse(
+                                call: Call<List<Food>>,
+                                response: Response<List<Food>>
+                            ) {
+                                if (response.isSuccessful) {
+                                    val restaurantList = response.body()
+                                    restaurantList?.let {
+                                        val nearestRestaurants = filterRestaurantsByDistance(
+                                            it,
+                                            location.latitude,
+                                            location.longitude,
+                                            10.0
+                                        ).shuffled().take(5)
+                                        Log.d("Restaurants", nearestRestaurants.toString())
+                                        setupRecyclerView(nearestRestaurants)
+                                    }
+                                } else {
+                                    Toast.makeText(
+                                        requireContext(),
+                                        "Failed to get nearest restaurants",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
+                            }
+
+                            override fun onFailure(call: Call<List<Food>>, t: Throwable) {
+                                Toast.makeText(
+                                    requireContext(),
+                                    "Error: ${t.message}",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        })
                 }
+            } catch (e: SecurityException) {
+                Toast.makeText(
+                    requireContext(),
+                    "Location permission is required",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
-
-            override fun onFailure(call: Call<List<Food>>, t: Throwable) {
-                Toast.makeText(requireContext(), "Error: ${t.message}", Toast.LENGTH_SHORT).show()
-            }
-        })
+        }
     }
 
     private fun setupRecyclerView(productList: List<Food>) {

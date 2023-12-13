@@ -17,7 +17,7 @@
 
         <RelativeLayout
             android:id="@+id/topLayout"
-            android:layout_width="400dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             card_view:layout_constraintEnd_toEndOf="parent"
             card_view:layout_constraintStart_toStartOf="parent"
