@@ -180,7 +180,7 @@ class ExpirationCheckerActivity : AppCompatActivity() {
 
             var maxIndex = 0
             var maxValue = outputFeature0.getFloatValue(0)
-            for (i in 0 until 4){
+            for (i in 0 until 2){
                 val value = outputFeature0.getFloatValue(i)
                 if (value > maxValue){
                     maxValue = value
