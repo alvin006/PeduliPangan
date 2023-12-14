@@ -74,5 +74,7 @@
     <string name="check_food">Cek Kadaluarsa Makanan</string>
     <string name="start_detection">Mulai Deteksi</string>
     <string name="input_img">Silahkan masukkan gambar</string>
+    <string name="detail">Detail</string>
+    <string name="harga">Harga</string>
 
 </resources>
