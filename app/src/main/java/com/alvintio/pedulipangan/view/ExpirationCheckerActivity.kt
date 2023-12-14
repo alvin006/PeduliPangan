@@ -13,6 +13,7 @@ import android.provider.MediaStore
 import android.provider.SyncStateContract.Helpers
 import android.view.Surface
 import android.view.View
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.CameraSelector
@@ -23,8 +24,13 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.core.util.Consumer
 import androidx.exifinterface.media.ExifInterface
+import com.alvintio.pedulipangan.R
 import com.alvintio.pedulipangan.databinding.ActivityExpirationCheckerBinding
+import com.alvintio.pedulipangan.ml.FoodPrediction
 import com.alvintio.pedulipangan.util.ViewUtils
+import org.tensorflow.lite.DataType
+import org.tensorflow.lite.support.image.TensorImage
+import org.tensorflow.lite.support.tensorbuffer.TensorBuffer
 import java.io.File
 import java.io.FileOutputStream
 import java.text.SimpleDateFormat
@@ -40,6 +46,8 @@ class ExpirationCheckerActivity : AppCompatActivity() {
     }
 
     private lateinit var binding: ActivityExpirationCheckerBinding
+
+    private var getFile: File ?= null
 
     private var pathImg: String = ""
 
@@ -87,6 +95,10 @@ class ExpirationCheckerActivity : AppCompatActivity() {
 
             btnGallery.setOnClickListener {
                 openGallery()
+            }
+
+            binding.startDetection.setOnClickListener {
+                startDetection()
             }
         }
 
@@ -145,5 +157,51 @@ class ExpirationCheckerActivity : AppCompatActivity() {
 
     private fun checkImagePermission() = REQUIRED_CAMERA_PERMISS.all {
         ContextCompat.checkSelfPermission(baseContext, it) == PackageManager.PERMISSION_GRANTED
+    }
+
+    private fun startDetection() {
+        if (getFile != null){
+
+            val model = FoodPrediction.newInstance(this)
+            val foodsDisease = getFoodDisease()
+
+            val inputFeature0 = TensorBuffer.createFixedSize(intArrayOf(1, 150, 150, 3), DataType.FLOAT32)
+
+            val bitmap = BitmapFactory.decodeFile(getFile?.path)
+            val resize = Bitmap.createScaledBitmap(bitmap, 150, 150, true)
+
+            val tensorImage = TensorImage(DataType.FLOAT32)
+            tensorImage.load(resize)
+
+            inputFeature0.loadBuffer(tensorImage.buffer)
+
+            val outputs = model.process(inputFeature0)
+            val outputFeature0 = outputs.outputFeature0AsTensorBuffer
+
+            var maxIndex = 0
+            var maxValue = outputFeature0.getFloatValue(0)
+            for (i in 0 until 4){
+                val value = outputFeature0.getFloatValue(i)
+                if (value > maxValue){
+                    maxValue = value
+                    maxIndex = i
+                }
+            }
+
+            val foodDisease = foodsDisease[maxIndex]
+
+            binding.foodDisease.text = foodDisease
+
+        }else{
+            Toast.makeText(this, getString(R.string.input_img), Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun getFoodDisease(): List<String> {
+        val inputString = this.assets.open("labels_output.txt").bufferedReader().use {
+            it.readText()
+        }
+
+        return inputString.split("\n")
     }
 }
