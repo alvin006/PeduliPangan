@@ -10,10 +10,22 @@
         android:layout_height="wrap_content">
 
         <ImageView
+            android:id="@+id/ivBackButton"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="4dp"
+            android:layout_marginBottom="4dp"
+            android:src="@drawable/baseline_arrow_back_24" />
+
+
+        <ImageView
             android:id="@+id/ivDetailList"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:scaleType="centerCrop"
+            android:layout_height="250dp"
+            android:layout_below="@id/ivBackButton"
+            android:scaleType="fitCenter"
             android:src="@drawable/ic_launcher_background" />
 
         <TextView
@@ -29,50 +41,24 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/tvProductPrice"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tvProductNameDetail"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
-            android:text="@string/harga"
-            android:textColor="@color/black"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-
-        <TextView
             android:id="@+id/tvProductPriceDetail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/tvProductPrice"
-            android:layout_marginTop="4dp"
-            android:layout_marginStart="16dp"
+            android:layout_toEndOf="@id/tvProductNameDetail"
+            android:layout_below="@id/ivDetailList"
+            android:layout_marginTop="19dp"
+            android:layout_marginStart="90dp"
             android:textColor="@color/black"
             android:text="@string/product_detail_price"
             android:textSize="18sp" />
 
         <TextView
-            android:id="@+id/tvProductDescription"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tvProductPriceDetail"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="0dp"
-            android:text="@string/detail"
-            android:textStyle="bold"
-            android:textAlignment="viewStart"
-            android:textColor="@color/black"
-            android:textSize="16sp" />
-
-        <TextView
             android:id="@+id/tvProductDescriptionDetail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/tvProductDescription"
+            android:layout_below="@id/tvProductNameDetail"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="16dp"
             android:text="@string/product_detail_description"

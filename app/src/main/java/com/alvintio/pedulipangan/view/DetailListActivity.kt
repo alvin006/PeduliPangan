@@ -54,6 +54,8 @@ class DetailListActivity : AppCompatActivity() {
             .error(R.drawable.ic_launcher_background)
             .into(binding.ivDetailList)
 
+        setupBackButton()
+
         ViewUtils.setupFullScreen(this)
     }
 
@@ -63,6 +65,13 @@ class DetailListActivity : AppCompatActivity() {
         if (newQuantity >= 1) {
             quantity = newQuantity
             binding.tvQuantity.text = quantity.toString()
+        }
+    }
+
+    private fun setupBackButton() {
+        binding.ivBackButton.setOnClickListener {
+            // Kembali ke MainActivity
+            onBackPressed()
         }
     }
 
