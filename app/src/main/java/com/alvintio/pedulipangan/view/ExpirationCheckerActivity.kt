@@ -11,8 +11,7 @@ import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.provider.SyncStateContract.Helpers
-import android.view.Surface
-import android.view.View
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -33,6 +32,7 @@ import org.tensorflow.lite.support.image.TensorImage
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer
 import java.io.File
 import java.io.FileOutputStream
+import java.io.InputStream
 import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.concurrent.ExecutorService
@@ -47,30 +47,40 @@ class ExpirationCheckerActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityExpirationCheckerBinding
 
-    private var getFile: File ?= null
-
-    private var pathImg: String = ""
+    private var getFile: File? = null
 
     private val galleryLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
         if (it.resultCode == RESULT_OK) {
             val selectedImageUri: Uri? = it.data?.data
-            selectedImageUri?.let {
-                binding.ivProductImage.setImageURI(it)
+            selectedImageUri?.let { uri ->
+                getFile = File(getPathFromUri(uri))
+                binding.ivProductImage.setImageURI(uri)
             }
         }
     }
 
+    private fun getPathFromUri(uri: Uri): String {
+        val filePathColumn = arrayOf(MediaStore.Images.Media.DATA)
+        val cursor = contentResolver.query(uri, filePathColumn, null, null, null)
+        cursor?.use {
+            if (it.moveToFirst()) {
+                val columnIndex = it.getColumnIndex(filePathColumn[0])
+                return it.getString(columnIndex)
+            }
+        }
+        return ""
+    }
+
     private val cameraLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
         if (it.resultCode == RESULT_OK) {
-            val file = File(pathImg)
-            file.let { image ->
+            getFile?.let { image ->
                 val bitmap = BitmapFactory.decodeFile(image.path)
-                rotateImage(bitmap, pathImg).compress(
+                rotateImage(bitmap, image.path).compress(
                     Bitmap.CompressFormat.JPEG,
                     100,
                     FileOutputStream(image)
                 )
-                binding.ivProductImage.setImageBitmap(rotateImage(bitmap, pathImg))
+                binding.ivProductImage.setImageBitmap(rotateImage(bitmap, image.path))
             }
         }
     }
@@ -137,22 +147,31 @@ class ExpirationCheckerActivity : AppCompatActivity() {
                 Locale.US
             ).format(System.currentTimeMillis()), ".jpg", storageDir
         )
-        customTempFile.also {
-            pathImg = it.absolutePath
-            intent.putExtra(
-                MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(
-                    this@ExpirationCheckerActivity,
-                    "com.alvintio.pedulipangan.fileprovider",
-                    it
-                )
-            )
-            cameraLauncher.launch(intent)
-        }
+        getFile = customTempFile
+        val photoURI: Uri = FileProvider.getUriForFile(
+            this@ExpirationCheckerActivity,
+            "com.alvintio.pedulipangan.fileprovider",
+            customTempFile
+        )
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
+        cameraLauncher.launch(intent)
     }
 
     private fun openGallery() {
-        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-        galleryLauncher.launch(intent)
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.READ_EXTERNAL_STORAGE
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+            galleryLauncher.launch(intent)
+        } else {
+            ActivityCompat.requestPermissions(
+                this@ExpirationCheckerActivity,
+                arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
+                REQUEST_CODE_PERMISS
+            )
+        }
     }
 
     private fun checkImagePermission() = REQUIRED_CAMERA_PERMISS.all {
@@ -160,8 +179,7 @@ class ExpirationCheckerActivity : AppCompatActivity() {
     }
 
     private fun startDetection() {
-        if (getFile != null){
-
+        if (getFile != null) {
             val model = FoodPrediction.newInstance(this)
             val foodsDisease = getFoodDisease()
 
@@ -180,9 +198,9 @@ class ExpirationCheckerActivity : AppCompatActivity() {
 
             var maxIndex = 0
             var maxValue = outputFeature0.getFloatValue(0)
-            for (i in 0 until 2){
+            for (i in 0 until 2) {
                 val value = outputFeature0.getFloatValue(i)
-                if (value > maxValue){
+                if (value > maxValue) {
                     maxValue = value
                     maxIndex = i
                 }
@@ -192,7 +210,7 @@ class ExpirationCheckerActivity : AppCompatActivity() {
 
             binding.foodDisease.text = foodDisease
 
-        }else{
+        } else {
             Toast.makeText(this, getString(R.string.input_img), Toast.LENGTH_SHORT).show()
         }
     }
@@ -205,3 +223,4 @@ class ExpirationCheckerActivity : AppCompatActivity() {
         return inputString.split("\n")
     }
 }
+
