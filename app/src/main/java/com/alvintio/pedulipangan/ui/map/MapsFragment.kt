@@ -63,7 +63,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
             mMap.clear()
             foodList.forEach { food ->
                 val location = LatLng(food.latitude, food.longitude)
-                mMap.addMarker(MarkerOptions().position(location).title(food.name))
+                mMap.addMarker(MarkerOptions().position(location).title(food.name).snippet(food.detail))
             }
 
             if (foodList.isNotEmpty()) {

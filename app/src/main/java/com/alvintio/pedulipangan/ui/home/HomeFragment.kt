@@ -278,7 +278,7 @@ class HomeFragment : Fragment() {
                                             location.latitude,
                                             location.longitude,
                                             10.0
-                                        ).shuffled().take(5)
+                                        ).shuffled().take(10)
                                         Log.d("Restaurants", nearestRestaurants.toString())
                                         setupRecyclerView(nearestRestaurants)
                                     }
