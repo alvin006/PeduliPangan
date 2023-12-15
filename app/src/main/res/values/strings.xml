@@ -76,5 +76,6 @@
     <string name="input_img">Silahkan masukkan gambar</string>
     <string name="detail">Detail</string>
     <string name="harga">Harga</string>
+    <string name="find_food_recommend">Temukan rekomendasi makanan Anda disini!</string>
 
 </resources>
