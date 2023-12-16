@@ -60,6 +60,7 @@
         android:textColor="@color/white"
         android:text="@string/settings_logout"
         android:textSize="14sp"
+        android:textAllCaps="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/container" />
