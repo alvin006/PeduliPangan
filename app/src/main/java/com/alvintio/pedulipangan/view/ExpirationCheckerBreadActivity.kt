@@ -21,6 +21,7 @@ import com.alvintio.pedulipangan.R
 import com.alvintio.pedulipangan.databinding.ActivityExpirationCheckerBinding
 import com.alvintio.pedulipangan.databinding.ActivityExpirationCheckerBreadBinding
 import com.alvintio.pedulipangan.ml.FoodPrediction
+import com.alvintio.pedulipangan.ml.MyCnnModel2
 import com.alvintio.pedulipangan.util.ViewUtils
 import org.tensorflow.lite.DataType
 import org.tensorflow.lite.support.image.TensorImage
@@ -137,7 +138,7 @@ class ExpirationCheckerBreadActivity : AppCompatActivity() {
             SimpleDateFormat(
                 "dd-MMM-yyyy",
                 Locale.US
-            ).format(System.currentTimeMillis()), ".jpg", storageDir
+            ).format(System.currentTimeMillis()), ".png", storageDir
         )
         getFile = customTempFile
         val photoURI: Uri = FileProvider.getUriForFile(
@@ -172,7 +173,7 @@ class ExpirationCheckerBreadActivity : AppCompatActivity() {
 
     private fun startDetection() {
         if (getFile != null) {
-            val model = FoodPrediction.newInstance(this)
+            val model = MyCnnModel2.newInstance(this)
             val foodsDisease = getFoodDisease()
 
             val inputFeature0 = TensorBuffer.createFixedSize(intArrayOf(1, 150, 150, 3), DataType.FLOAT32)

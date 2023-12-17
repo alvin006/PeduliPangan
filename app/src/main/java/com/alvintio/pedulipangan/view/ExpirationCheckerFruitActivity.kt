@@ -21,6 +21,7 @@ import com.alvintio.pedulipangan.R
 import com.alvintio.pedulipangan.databinding.ActivityExpirationCheckerBinding
 import com.alvintio.pedulipangan.databinding.ActivityExpirationCheckerFruitBinding
 import com.alvintio.pedulipangan.ml.FoodPrediction
+import com.alvintio.pedulipangan.ml.MyCnnModel2
 import com.alvintio.pedulipangan.util.ViewUtils
 import org.tensorflow.lite.DataType
 import org.tensorflow.lite.support.image.TensorImage
@@ -171,7 +172,7 @@ class ExpirationCheckerFruitActivity : AppCompatActivity() {
 
     private fun startDetection() {
         if (getFile != null) {
-            val model = FoodPrediction.newInstance(this)
+            val model = MyCnnModel2.newInstance(this)
             val foodsDisease = getFoodDisease()
 
             val inputFeature0 = TensorBuffer.createFixedSize(intArrayOf(1, 150, 150, 3), DataType.FLOAT32)
@@ -207,7 +208,7 @@ class ExpirationCheckerFruitActivity : AppCompatActivity() {
     }
 
     private fun getFoodDisease(): List<String> {
-        val inputString = this.assets.open("labels_output.txt").bufferedReader().use {
+        val inputString = this.assets.open("labelfruit.txt").bufferedReader().use {
             it.readText()
         }
 
