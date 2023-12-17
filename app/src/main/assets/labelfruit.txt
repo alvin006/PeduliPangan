@@ -1,0 +1,15 @@
+Ripe Apple perkiraan kedaluwarsanya sekitar 1-2 minggu lagi
+Ripe Banana perkiraan kedaluwarsanya sekitar 3-4 hari lagi
+Ripe Bell Pepper perkiraan kedaluwarsanya sekitar 5-7 hari lagi
+Ripe Orange perkiraan kedaluwarsanya sekitar 1-2 minggu lagi
+Ripe Strawberry perkiraan kedaluwarsanya sekitar 1-2 hari lagi
+Ripe Tomato perkiraan kedaluwarsanya sekitar 5-7 hari lagi
+Rotten Apple sudah kedaluwarsa
+Rotten Banana sudah kedaluwarsa
+Rotten Orange sudah kedaluwarsa
+Unripe Apple perkiraan kedaluwarsanya sekitar 2-3 minggu lagi
+Unripe Banana perkiraan kedaluwarsanya sekitar 6-7 hari lagi
+Unripe Bell Pepper perkiraan kedaluwarsanya sekitar 5-7 hari lagi
+Unripe Orange perkiraan kedaluwarsanya sekitar 2-4 minggu lagi
+Unripe Strawberry perkiraan kedaluwarsanya sekitar 3-4 hari lagi
+Unripe Tomato perkiraan kedaluwarsanya sekitar 4-7 hari lagi
