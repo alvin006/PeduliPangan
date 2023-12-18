@@ -26,12 +26,16 @@ class SettingsViewModel : ViewModel() {
 
         userDataListener?.remove()
 
-        userDataListener = userRef.addSnapshotListener { documentSnapshot, _ ->
+        userDataListener = userRef.addSnapshotListener { documentSnapshot, exception ->
+            if (exception != null) {
+                return@addSnapshotListener
+            }
+
             if (documentSnapshot != null && documentSnapshot.exists()) {
                 val user = documentSnapshot.toObject(User::class.java)
 
                 if (user != null) {
-                    _userData.value = user
+                    _userData.value = user ?: User()
                 } else {
                 }
             }
