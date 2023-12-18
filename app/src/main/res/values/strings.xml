@@ -10,8 +10,8 @@
     <string name="onboarding_desc_2">Apa hayo</string>
     <string name="onboarding_title_3">Delivery Time</string>
     <string name="onboarding_desc_3">Penjelasan tentang waktu</string>
-    <string name="onboarding_title_4">Status Ekonomi</string>
-    <string name="onboarding_desc_4">Penjelasan status ekonomi</string>
+    <string name="onboarding_title_4">Pengecekan Kedaluwarsa Makanan</string>
+    <string name="onboarding_desc_4">Anda dapat melakukan pengecekan kedaluwarsa terhadap roti, buah, dan sayuri</string>
     <string name="onboarding_title_5">Celebrate</string>
     <string name="onboarding_desc_5">Penjelasan berhasil</string>
     <string name="start_now">Mulai sekarang</string>
