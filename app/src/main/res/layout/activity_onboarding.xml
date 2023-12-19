@@ -164,7 +164,7 @@
         android:transitionName="lottie"
         app:lottie_autoPlay="true"
         app:lottie_loop="true"
-        app:lottie_rawRes="@raw/status_check"
+        app:lottie_rawRes="@raw/scan_img"
         android:importantForAccessibility="no" />
 
     <TextView
