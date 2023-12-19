@@ -58,6 +58,7 @@
         android:gravity="center_horizontal"
         android:text="@string/onboarding_desc_1"
         android:textColor="@color/black"
+        android:padding="4dp"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="@id/titleMenu1"
         app:layout_constraintStart_toStartOf="@id/titleMenu1"
@@ -101,6 +102,7 @@
         android:text="@string/onboarding_desc_2"
         android:textColor="@color/black"
         android:textSize="16sp"
+        android:padding="4dp"
         app:layout_constraintEnd_toEndOf="@id/titleMenu2"
         app:layout_constraintStart_toStartOf="@id/logoMenu2"
         app:layout_constraintTop_toBottomOf="@id/titleMenu2" />
@@ -144,6 +146,7 @@
         android:text="@string/onboarding_desc_3"
         android:textColor="@color/black"
         android:textSize="16sp"
+        android:padding="4dp"
         app:layout_constraintEnd_toEndOf="@id/titleMenu3"
         app:layout_constraintStart_toStartOf="@id/titleMenu3"
         app:layout_constraintTop_toBottomOf="@id/titleMenu3" />
@@ -172,7 +175,7 @@
         android:gravity="center_horizontal"
         android:text="@string/onboarding_title_4"
         android:textColor="@color/dark_green"
-        android:textSize="20sp"
+        android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="@id/logoMenu4"
         app:layout_constraintStart_toStartOf="@id/logoMenu4"
@@ -187,6 +190,7 @@
         android:text="@string/onboarding_desc_4"
         android:textColor="@color/black"
         android:textSize="16sp"
+        android:padding="4dp"
         app:layout_constraintEnd_toEndOf="@id/titleMenu4"
         app:layout_constraintStart_toStartOf="@id/titleMenu4"
         app:layout_constraintTop_toBottomOf="@id/titleMenu4" />
