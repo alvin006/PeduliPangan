@@ -12,6 +12,7 @@ import android.os.Environment
 import android.provider.MediaStore
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -151,21 +152,40 @@ class ExpirationCheckerBreadActivity : AppCompatActivity() {
     }
 
     private fun openGallery() {
-        if (ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.READ_EXTERNAL_STORAGE
-            ) == PackageManager.PERMISSION_GRANTED
-        ) {
-            val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+        val options = arrayOf("File Manager", "Galeri")
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Pilih Sumber Gambar")
+        builder.setItems(options) { _, which ->
+            when (which) {
+                0 -> openFileManager()
+                1 -> openImageGallery()
+            }
+        }
+        builder.show()
+    }
+
+    private fun openFileManager() {
+        val intent = Intent(Intent.ACTION_GET_CONTENT)
+        intent.type = "*/*"
+
+        if (intent.resolveActivity(packageManager) != null) {
             galleryLauncher.launch(intent)
         } else {
-            ActivityCompat.requestPermissions(
-                this@ExpirationCheckerBreadActivity,
-                arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
-                REQUEST_CODE_PERMISS
-            )
+            Toast.makeText(this, "Tidak ada aplikasi file manager yang tersedia", Toast.LENGTH_SHORT).show()
         }
     }
+
+    private fun openImageGallery() {
+        val intent = Intent(Intent.ACTION_GET_CONTENT)
+        intent.type = "image/*"
+
+        if (intent.resolveActivity(packageManager) != null) {
+            galleryLauncher.launch(intent)
+        } else {
+            Toast.makeText(this, "Tidak ada aplikasi galeri yang tersedia", Toast.LENGTH_SHORT).show()
+        }
+    }
+
 
     private fun checkImagePermission() = REQUIRED_CAMERA_PERMISS.all {
         ContextCompat.checkSelfPermission(baseContext, it) == PackageManager.PERMISSION_GRANTED
