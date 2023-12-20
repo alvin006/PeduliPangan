@@ -165,7 +165,7 @@ class ExpirationCheckerFruitActivity : AppCompatActivity() {
 
     private fun openFileManager() {
         val intent = Intent(Intent.ACTION_GET_CONTENT)
-        intent.type = "*/*"
+        intent.type = "image/*"
 
         if (intent.resolveActivity(packageManager) != null) {
             galleryLauncher.launch(intent)
